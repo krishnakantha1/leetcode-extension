@@ -1,0 +1,30 @@
+{
+    "name" : "overlay",
+    "version" : "0.1.0",
+    "description" : "canvas overlay for teaching",
+    "permissions" : ["storage","tabs","scripting"],
+    "host_permissions": ["https://*.leetcode.com/problems/*"],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "web_accessible_resources": [{
+          "resources": [
+            "files/create.png",
+            "files/delete.png",
+            "files/hide.png",
+            "files/prompt.png",
+            "canvas.js"
+          ],
+          "matches": ["https://*.leetcode.com/*"]
+    }],
+    "content_scripts" : [{
+        "matches" : ["https://*.leetcode.com/problems/*"],
+        "js" : ["contentScript.js"]
+        
+    }],
+    "action":{
+        "default_tytle": "overlay",
+        "default_popup": "popup.html"
+    },
+    "manifest_version": 3
+}

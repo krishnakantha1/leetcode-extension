@@ -1,0 +1,73 @@
+.kkoverlay-controlpannel{
+    position: fixed;
+    top: 100px;
+    right: 0px;
+    width : 30px;
+    height: 40px;
+    background-color: rgba(1,1,1,0.3);
+
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+
+    display: flex;
+    justify-content: space-around;
+    z-index: 1000;
+}
+
+.kkoverlay-controlpannel:hover{
+    width: 150px;
+}
+
+/* prompt style */
+.kkoverlay-controlprompt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height:100%;
+    position: relative;
+}
+.kkoverlay-controlprompt img{
+    height: 50%;
+    filter: opacity(0.5);
+}
+
+
+/* hide initially */
+.kkoverlay-controloption{
+    display: none;
+}
+
+/* hide when hover */
+.kkoverlay-controlpannel:hover .kkoverlay-controlprompt{
+    display: none;
+}
+
+/* show when hover */
+.kkoverlay-controlpannel:hover .kkoverlay-controloption{
+    display: flex;
+    height :100%;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.kkoverlay-controloption img{
+    height: 50%;
+    filter: opacity(0.5);
+}
+
+.kkoverlay-controloption:hover img{
+    filter: invert(100%);
+}
+
+/* canvas */
+.kkoverlay-canvas{
+    position: fixed;
+    top:0;
+    left:0;
+}
+
+.kkoverlay-hidecanvas{
+    display: none;
+}
+
+
