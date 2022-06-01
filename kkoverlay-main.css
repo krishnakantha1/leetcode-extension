@@ -12,6 +12,9 @@
     display: flex;
     justify-content: space-around;
     z-index: 1000;
+
+    transition: width 0.1s ease-in-out;
+
 }
 
 .kkoverlay-controlpannel:hover{
@@ -61,7 +64,7 @@
 
 /* canvas */
 .kkoverlay-canvas{
-    position: fixed;
+    position: absolute;
     top:0;
     left:0;
 }

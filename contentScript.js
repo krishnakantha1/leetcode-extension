@@ -3,6 +3,37 @@
     const c = chrome.runtime.getURL("canvas.js")
     const m = await import(c)
 
+
+    const body = document.querySelector("body")
+    body.addEventListener("keypress",(e)=>{
+        
+        const canvas = document.querySelector(".kkoverlay-canvas")
+        if(!canvas) return
+
+        if(e.ctrlKey && e.code==="KeyB"){
+            
+            canvas.style.pointerEvents = "none"
+
+        }else if(e.ctrlKey && e.code === "KeyZ"){
+    
+            canvas.kkoverlay_undo()
+        }
+
+    })
+
+
+    body.addEventListener("keyup",(e)=>{
+        const canvas = document.querySelector(".kkoverlay-canvas")
+
+        if(!canvas) return
+
+        if(canvas.classList.contains("kkoverlay-hidecanvas")) return
+
+        canvas.style.pointerEvents = "all";
+
+        removeFocus()
+    })
+
     let controlPannel = document.querySelector(".kkoverlay-controlpannel")
     const controlOptions = [
         {
@@ -27,6 +58,8 @@
 
                 const not_display = document.querySelector(".kkoverlay-hidecanvas")
 
+                removeFocus()
+
                 if(not_display){
                     canvas.classList.remove("kkoverlay-hidecanvas")
                 }else{
@@ -39,18 +72,23 @@
             title : "Add Canvas",
             imageSrc : chrome.runtime.getURL("files/create.png"),
             handleClick : function(e){
-                const canvas = document.querySelector(".kkoverlay-canvas")
+                let canvas = document.querySelector(".kkoverlay-canvas")
                 
                 if(canvas) return
 
                 let bdy = document.querySelector("body")
-                bdy.appendChild(m.kkoverlay_getCanvas(bdy.clientHeight, bdy.clientWidth))
+                canvas = m.kkoverlay_getCanvas(bdy.clientHeight, bdy.clientWidth)
+                
+                removeFocus()
+
+                bdy.appendChild(canvas)
             }
         }
         
     ]
 
     if(!controlPannel){
+
         controlPannel = createControlPannel()
         document.querySelector("body").appendChild(controlPannel)
     }
@@ -99,6 +137,15 @@
         div.appendChild(img)
 
         return div
+    }
+
+
+    function removeFocus(){
+        const activeElement = document.activeElement
+
+        if(!activeElement) return
+
+        activeElement.blur()
     }
 
 })();

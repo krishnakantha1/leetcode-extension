@@ -8,6 +8,8 @@ export const kkoverlay_getCanvas = (height,width) => {
 
     let drawing = false
 
+    let strokes = []
+
     const strokeStart = (e) => {
         e.preventDefault()
 
@@ -15,7 +17,7 @@ export const kkoverlay_getCanvas = (height,width) => {
 
         drawing = true
         ctx.strokeStyle = "black";
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 3;
         ctx.fillStyle = "black";
         ctx.beginPath();
         drawStroke(e)
@@ -28,8 +30,6 @@ export const kkoverlay_getCanvas = (height,width) => {
 
         drawing = false
         ctx.stroke()
-      
-
     }
 
     const drawStroke = (e) => {
@@ -41,13 +41,83 @@ export const kkoverlay_getCanvas = (height,width) => {
         ctx.lineTo(x, y)
         ctx.stroke()
         ctx.beginPath()
-        ctx.moveTo(x, y);
+        ctx.moveTo(x, y)
     }
 
+    HTMLCanvasElement.prototype.kkoverlay_undo = function(){
+        strokes.pop()
 
-    canvas.addEventListener("mousedown",strokeStart)
-    canvas.addEventListener("mouseup",strokeEnd)
-    canvas.addEventListener("mousemove",drawStroke)
+        console.log(strokes)
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        strokes.forEach( stroke => {
+            stroke.forEach( inst => {
+                if(inst.type==="strokeStart") {
+                    strokeStart({ 
+                        preventDefault : ()=> null,
+                        clientX : inst.clientX,
+                        clientY : inst.clientY
+                     })
+                }else if(inst.type === "drawStroke"){
+                    drawStroke({
+                        clientX : inst.clientX,
+                        clientY : inst.clientY
+                    })
+                }else if(inst.type === "strokeEnd"){
+                    strokeEnd({
+                        preventDefault : ()=> null
+                    })
+                }
+            })
+        })
+    }
+
+    
+
+
+    canvas.addEventListener("mousedown",(e) => {
+        const pannel = document.querySelector(".kkoverlay-controlpannel")
+        pannel.style.pointerEvents = "none"
+
+        strokeStart(e)
+
+        if(!drawing) return
+
+        strokes.push([{
+            type : "strokeStart",
+            clientX : e.clientX,
+            clientY : e.clientY
+        }])
+
+    })
+
+    canvas.addEventListener("mouseup",(e) => {
+        const pannel = document.querySelector(".kkoverlay-controlpannel")
+        pannel.style.pointerEvents = "all"
+
+        strokeEnd(e)
+
+        if(drawing) return
+
+        strokes[strokes.length-1].push({
+            type : "strokeEnd",
+        })
+
+    })
+
+    canvas.addEventListener("mousemove",(e) => {
+        drawStroke(e)
+
+        if(!drawing) return
+
+        strokes[strokes.length-1].push({
+            type : "drawStroke",
+            clientX : e.clientX,
+            clientY : e.clientY
+        })
+
+    })
 
     return canvas
 }
